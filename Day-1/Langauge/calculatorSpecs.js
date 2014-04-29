@@ -99,4 +99,56 @@ $(function(){
 		//assert
 		return expectedResult === result;
 	})
+	test("Should be able to add an array of numbers",function(){
+		//arrange
+		var 
+			numbers = [10,20,30,40],
+			expectedResult = 100;
+		
+
+		//act
+		var result = add(numbers);
+		console.log(result);
+		//assert
+		return expectedResult === result;
+	})
+	test("Should be able to add a nested array of numbers",function(){
+		//arrange
+		var 
+			numbers = [10,[20,[30,[40]]]],
+			expectedResult = 100;
+		
+
+		//act
+		var result = add(numbers);
+		console.log(result);
+		//assert
+		return expectedResult === result;
+	})
+	test("Should be able to add array of functions returning functions returning numbers in string format",function(){
+		//arrange
+		var f1 = function(){ return function(){ return "10";}},
+			f2 = function(){ return function(){ return "20";}},
+			expectedResult = 30;
+		
+
+		//act
+		var result = add([f1,f2]);
+		console.log(result);
+		//assert
+		return expectedResult === result;
+	})
+	test("Should be able to add array functions returning functions returning array of numbers and strings",function(){
+		//arrange
+		var f1 = function(){ return function(){ return ["10",20];}},
+			f2 = function(){ return function(){ return ["30",40];}},
+			expectedResult = 100;
+		
+
+		//act
+		var result = add([f1,f2]);
+		console.log(result);
+		//assert
+		return expectedResult === result;
+	})
 })
