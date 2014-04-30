@@ -118,3 +118,38 @@ var categories = [
 	{id : 1, name : "stationary"},
 	{id : 2, name : "grocery"}
 ]
+
+function sum(list, iterator){
+	var result = 0;
+	for(var i=0;i<list.length;i++)
+		result += iterator(list[i]);
+	return result;
+}
+
+var sumOfProductCost = sum(products,function(p){ return p.cost})
+
+function countBy(list,predicate){
+	var result = 0;
+	for(var i=0;i<list.length;i++)
+		if (predicate(list[i])) result++;
+	return result;
+}
+
+function join(leftList, rightList, leftKeySelector, rightKeySelector, combinator){
+	var result = [];
+	for(var i=0;i<leftList.length;i++){
+		var leftItem = leftList[i], leftKey = leftKeySelector(leftItem);
+		for(var j=0;j<rightList.length;j++){
+			var rightItem = rightList[j], rightKey = rightKeySelector(rightItem);
+			if (leftKey === rightKey)
+				result.push(combinator(leftItem,rightItem));
+		}
+	}
+	return result;
+}
+
+var productsWithCategoryNames = join(products,categories,function(p){ return p.category;}, function(c){ return c.id}, function(p,c){ 
+  return { id : p.id, name : p.name, cost : p.cost, units : p.units, category : c.name};
+});
+
+console.table(productsWithCategoryNames)
