@@ -73,10 +73,13 @@
 		function triggerChangeSubscribers(attrName){
 			var subscribers = _changeSubscribers[attrName] || [];
 			for(var i=0;i<subscribers.length;i++){
-				setTimeout(function(){
-					console.log("value of i = ", i);
-					subscribers[i]();
-				});
+				setTimeout( (function(index){
+						return function(){
+							console.log("value of i = ", index);
+							subscribers[index]();
+						}
+					})(i)
+				);
 			}
 		}
 		this.calculate = function(){

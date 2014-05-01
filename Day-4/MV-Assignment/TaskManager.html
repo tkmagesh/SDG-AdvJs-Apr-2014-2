@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Task Manager</title>
+	<style>
+		h1 {
+			border-top: 2px solid blue;
+			border-bottom: 2px solid blue;
+			background-color: lightblue;
+			padding : 15px;
+			margin-top : 0px;
+		}
+		.completed {
+			color : red;
+			font-style: italice;
+			text-decoration: line-through;
+		}
+		ul{
+			width: 300px;
+		}
+		li{
+			cursor: pointer;
+			list-style: none;
+			margin: 5px;
+			padding: 3px;
+			border : 1px solid gray;
+			background-color: #e7e7e7;
+		}
+	</style>
+	<script>
+	(function (){
+		var taskCount = 0;
+		function onBtnAddTaskClick(){
+			var task = document.getElementById("txtTask").value;
+			var newTask = document.createElement("li");
+			newTask.innerText = task;
+			newTask.addEventListener("click",onTaskItemClick);
+			document.getElementById("ulTaskList").appendChild(newTask);
+			++taskCount;
+			displayMessage(taskCount + " tasks are added till now!");
+		}
+		function displayMessage(msg){
+			document.getElementById("divMessage").innerHTML = msg;
+		}
+		function init(){
+			document.getElementById("btnAddTask").addEventListener("click",onBtnAddTaskClick);
+			document.getElementById("btnRemoveCompleted").addEventListener("click",onBtnRemoveCompletedClick);
+			var taskItems = document.getElementById("ulTaskList").children;
+			for(var i=0;i<taskItems.length;i++)
+				taskItems[i].addEventListener("click",onTaskItemClick);
+		}
+		function onBtnRemoveCompletedClick(){
+			var taskItems = document.getElementById("ulTaskList").children;
+			for(var i=taskItems.length-1;i>=0;i--)
+				if (taskItems[i].classList.contains("completed"))
+					taskItems[i].remove();
+		}
+		function onTaskItemClick(){
+			if (this.classList.contains("completed")){
+				this.classList.remove("completed");
+			} else {
+				this.classList.add("completed");
+			}
+		}
+		window.addEventListener("DOMContentLoaded",init);
+	})();
+	
+	</script>
+</head>
+<body>
+	<h1>Task Manager</h1>
+	<div id="content">
+		<span>Task :</span>
+		<input type="text" name="" id="txtTask">
+		<input type="button" value="Add Task" id="btnAddTask" >
+		<input type="button" value="Remove Completed" id="btnRemoveCompleted">
+		<ul id="ulTaskList">
+			
+		</ul>
+		<div id="divMessage">[Messages will be displayed here]</div>
+	</div>
+</body>
+</html>
