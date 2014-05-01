@@ -72,8 +72,12 @@
 		};
 		function triggerChangeSubscribers(attrName){
 			var subscribers = _changeSubscribers[attrName] || [];
-			for(var i=0;i<subscribers.length;i++)
-				subscribers[i]();
+			for(var i=0;i<subscribers.length;i++){
+				setTimeout(function(){
+					console.log("value of i = ", i);
+					subscribers[i]();
+				});
+			}
 		}
 		this.calculate = function(){
 			var net = this.basic() + this.hra() + this.da();
@@ -131,12 +135,39 @@
 			return this;
 		};
 	}
+	function SalaryCalculatorListView(model){
+		this.model = model;
+		this.$root=$("<table></table>");
+		var salaryChangeCallback = (function(){
+			var $row = $("<tr>");
+			$row.append("<td>" + this.model.basic() + "</td>");
+			$row.append("<td>" + this.model.hra() + "</td>");
+			$row.append("<td>" + this.model.da() + "</td>");
+			$row.append("<td>" + this.model.tax() + "</td>");
+			$row.append("<td>" + this.model.salary() + "</td>");
+			this.$root.append($row);
+		}).bind(this);
+
+		this.init = function(){
+			this.model.addChangeSubscriber("salary",salaryChangeCallback);
+		};
+		this.render = function(){
+			return this;
+		};
+	}
 	</script>
 	<script>
 	/*View*/
 	
 	$(function(){
-		
+		window.calculator = new SalaryCalculator();
+		var editView = new SalaryCalculatorView(calculator);
+		editView.init();
+		editView.render().$root.appendTo(document.body);
+
+		var listView = new SalaryCalculatorListView(calculator);
+		listView.init();
+		listView.render().$root.appendTo(document.body);
 	});
 	</script>
 </head>
