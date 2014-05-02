@@ -1,6 +1,5 @@
-
-function Task(name){
-
+define([],function(){
+	return function Task(name){
 		var _name = name;
 		this.name = function(val){
 			if (typeof val === "undefined") return _name;
@@ -37,4 +36,5 @@ function Task(name){
 				);
 			}
 		}
-	}
+	}	
+})

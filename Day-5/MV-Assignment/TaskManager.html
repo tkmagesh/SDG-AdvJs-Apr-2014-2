@@ -11,6 +11,7 @@
 	<script src="TaskCollectionView.js"></script>
 	<script>
 	$(function(){
+		
 		window.taskCollection = new TaskCollection();
 		window.taskCollectionView = new TaskCollectionView(taskCollection);
 		taskCollectionView.init();
@@ -32,6 +33,7 @@
 	</script>
 </head>
 <body>
+	<input type="button" value="Throw error" id="btnError">
 	<h1>Task Manager</h1>
 	
 </body>
