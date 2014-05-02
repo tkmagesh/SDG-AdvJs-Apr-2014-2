@@ -1,0 +1,23 @@
+		h1 {
+			border-top: 2px solid blue;
+			border-bottom: 2px solid blue;
+			background-color: lightblue;
+			padding : 15px;
+			margin-top : 0px;
+		}
+		.completed {
+			color : red;
+			font-style: italice;
+			text-decoration: line-through;
+		}
+		ul{
+			width: 300px;
+		}
+		li{
+			cursor: pointer;
+			list-style: none;
+			margin: 5px;
+			padding: 3px;
+			border : 1px solid gray;
+			background-color: #e7e7e7;
+		}
