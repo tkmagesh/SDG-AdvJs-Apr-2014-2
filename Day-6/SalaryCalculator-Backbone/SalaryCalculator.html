@@ -150,7 +150,7 @@
 			return this;
 		};
 	}*/
-	
+
 	/*function SalaryCalculatorListView(model){
 		this.model = model;
 		this.$root=$("<table></table>");
@@ -198,20 +198,31 @@
 			this.$("#divResult").html(this.model.get('salary'));
 		}
 	});
+	var CalculatorListView = Backbone.View.extend({
+		el : "#salaryList",
+		initialize : function(){
+			this.listenTo(this.model,'change:salary', this.addRow);
+		},
+		addRow : function(){
+			var newRow = "<tr><td>" + this.model.get('basic') + "</td><td>" + this.model.get('hra') + "</td><td>" + this.model.get('da') + "</td><td>" + this.model.get('tax') + "</td><td>" + this.model.get('salary') + "</td></tr>"
+			this.$el.append(newRow);
+		}
+	});
 	</script>
 	<script>
-	/*View*/
+	$(function(){
+		var calculator = new SalaryCalculator();
+		var view1 = new SalaryCalculatorView({
+			model : calculator,
+			el : "div.content"
+		});
+		var view2 = new CalculatorListView({
+			model : calculator,
+			el : "#salaryList"
+		});
+	});
 	
-	/*$(function(){
-		window.calculator = new SalaryCalculator();
-		var editView = new SalaryCalculatorView(calculator);
-		editView.init();
-		editView.render().$root.appendTo(document.body);
-
-		var listView = new SalaryCalculatorListView(calculator);
-		listView.init();
-		listView.render().$root.appendTo(document.body);
-	});*/
+	
 	</script>
 </head>
 <body>
@@ -231,5 +242,8 @@
 			<div id="divResult">[Salary]</div>
 		</div>
 	</div>
+	<table id="salaryList">
+		
+	</table>
 </body>
 </html>
