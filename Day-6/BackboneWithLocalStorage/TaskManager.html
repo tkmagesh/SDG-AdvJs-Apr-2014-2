@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Task Manager</title>
+	<style>
+	.completed {
+		color : red;
+		text-decoration: line-through;
+		font-style: italic;
+	}
+	</style>
+	<script src="jquery.js"></script>
+	<script src="underscore.js"></script>
+	<script src="backbone.js"></script>
+	<script src="backbone.localStorage.js"></script>
+	<script type="text/javascript">
+	var Task = Backbone.Model.extend({
+		defaults : {
+			name : "",
+			isCompleted : false
+		},
+		toggleCompletion : function(){
+			this.save({isCompleted : !this.get('isCompleted')});
+		}
+	});
+
+	var TaskCollection = Backbone.Collection.extend({
+		model : Task,
+		localStorage : new Backbone.LocalStorage("SDGTasks"),
+		removeCompleted : function(){
+			this.forEach(function(t){
+				if (t.get('isCompleted'))
+					t.destroy();
+			});
+		}
+	});
+
+	var TaskAppView = Backbone.View.extend({
+		initialize:function(){
+			this.listenTo(this.collection,'add',this.addNewTask);
+		},
+		addNewTask : function(newTask){
+			var newTaskView = new TaskView({
+				model : newTask
+			});
+			newTaskView.render().$el.appendTo(this.$("#ulTaskList"));
+		},
+		events : {
+			'click #btnAddTask' : 'addTask',
+			'click #btnRemoveCompleted' : 'removeCompleted'
+		},
+		addTask : function(){
+			var taskName = this.$("#txtTask").val();
+			this.collection.create({name : taskName});
+		},
+		removeCompleted : function(){
+			this.collection.removeCompleted()
+		}
+	});
+
+	var TaskView = Backbone.View.extend({
+		tagName : "li",
+		initialize : function(){
+			this.listenTo(this.model,'change',this.render);
+			this.listenTo(this.model,'destroy',this.destroy);
+		},
+		destroy : function(){
+			this.$el.remove();
+		},
+		render : function(){
+			this.$el.html(this.model.get('name'));
+			if (this.model.get('isCompleted')){
+				this.$el.addClass("completed");
+			} else {
+				this.$el.removeClass("completed");
+			};
+			return this;
+		},
+		events :{
+			'click' : 'toggleCompletion'
+		},
+		toggleCompletion : function(){
+			this.model.toggleCompletion();
+		}
+	});
+	$(function(){
+		window.taskCollection = new TaskCollection();
+		window.taskAppView = new TaskAppView({
+			collection : taskCollection,
+			el : "div.content"
+		});
+		taskCollection.fetch();
+	});
+	</script>
+</head>
+<body>
+	<h1>Task Manager</h1>
+	<hr>
+	<div class="content">
+		<span>Task :</span>
+		<input type="text" name="" id="txtTask">
+		<input type="button" value="Add Task" id="btnAddTask">
+		<input type="button" value="RemoveCompleted" id="btnRemoveCompleted">
+		<ul id="ulTaskList"></ul>
+	</div>
+</body>
+</html>

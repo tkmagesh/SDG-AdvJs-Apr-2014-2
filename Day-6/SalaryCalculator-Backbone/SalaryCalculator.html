@@ -199,7 +199,6 @@
 		}
 	});
 	var CalculatorListView = Backbone.View.extend({
-		el : "#salaryList",
 		initialize : function(){
 			this.listenTo(this.model,'change:salary', this.addRow);
 		},

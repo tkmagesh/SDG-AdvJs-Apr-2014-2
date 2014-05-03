@@ -1,0 +1,39 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <script src="~/Scripts/jquery.js"></script>
+    <script src="~/Scripts/underscore.js"></script>
+    <script src="~/Scripts/backbone.js"></script>
+    <title>Task Manager</title>
+    <script>
+        var Task = Backbone.Model.extend({
+            defaults: {
+                name: "",
+                isCompleted : false
+            },
+            toggleCompletion: function () {
+                this.set('isCompleted', !this.get('isCompleted'));
+            }
+        });
+
+        var TaskCollection = Backbone.Collection.extend({
+            model: Task,
+            url: "/api/TaskService"
+        });
+
+    </script>
+</head>
+<body>
+    <h1>Task Manager</h1>
+    <hr />
+    <div>
+        
+    </div>
+</body>
+</html>
