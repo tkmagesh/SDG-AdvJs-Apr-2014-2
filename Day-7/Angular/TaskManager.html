@@ -3,13 +3,27 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Task Manager</title>
+	<style>
+		.completed {
+			color : red;
+			text-decoration: line-through;
+			font-style: italic;
+		}
+	</style>
 	<script src="angular.js"></script>
 	<script>
 	function taskController($scope){
 		$scope.tasks = {
 			list : [],
-			addTask : function(task){
-				this.list.push(task);
+			addTask : function(taskName){
+				var newTask = { 
+					name : taskName, 
+					isCompleted : false,
+					toggleCompletion : function(){
+						this.isCompleted = !this.isCompleted
+					}
+				};
+				this.list.push(newTask);
 			}
 		}
 	}
@@ -24,7 +38,11 @@
 		<button data-ng-click="tasks.addTask(newTask)">Add Task</button>
 		<button>Remove Completed</button>
 		<ul>
-			<li data-ng-repeat="task in tasks.list">{{task}}</li>
+			<li 
+			data-ng-repeat="task in tasks.list"
+			data-ng-class="{completed : task.isCompleted}"
+			data-ng-click="task.toggleCompletion()"
+			>{{task.name}}</li>
 		</ul>
 	</div>
 </body>
