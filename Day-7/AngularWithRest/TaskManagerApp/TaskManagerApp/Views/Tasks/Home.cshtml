@@ -1,3 +1,7 @@
+@{
+    Layout = null;
+}
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -10,7 +14,7 @@
 			font-style: italic;
 		}
 	</style>
-	<script src="angular.js"></script>
+	<script src="~/Scripts/angular.js"></script>
 	<script>
 	
 	angular
@@ -25,34 +29,50 @@
 			};
 			return Task;
 		})
+        .factory("TaskService", ['$http', function (a) {
+            return {
+                getAllTasks: function () {
+                    return a({ method: "get", url: "/api/taskService" });
+                }
+            };
+        }])
 		.filter('trimTask', function(){
 			return function(data,length){
 				length = length || 20;
 				return !!data ? data.substr(0,length) + "..." : data;
 			}
 		}
-)		.controller("taskController", function taskController($scope,Task){
-			$scope.tasks = {
-				list : [],
-				addTask : function(taskName){
-					var newTask = new Task(taskName);
-					this.list.push(newTask);
-					this.lastModifiedAt = new Date();
-				},
-				removeCompleted : function(){
-					for(var i=this.list.length -1; i>= 0; i--)
-						if (this.list[i].isCompleted)
-							this.list.splice(i,1);
-					this.lastModifiedAt = new Date();
-				},
-				getCompletedCount : function(){
-					return this.list.reduce(function(pResult, t){
-						return pResult + (t.isCompleted ? 1 : 0);
-					},0);
-				},
-				lastModifiedAt : new Date()
-			}
-		});
+).controller("taskController", ['$scope','Task','TaskService', function ($scope, Task, TaskService) {
+    
+    $scope.tasks = {
+        list: [],
+        addTask: function (taskName) {
+            var newTask = new Task(taskName);
+            this.list.push(newTask);
+            this.lastModifiedAt = new Date();
+        },
+        removeCompleted: function () {
+            for (var i = this.list.length - 1; i >= 0; i--)
+                if (this.list[i].isCompleted)
+                    this.list.splice(i, 1);
+            this.lastModifiedAt = new Date();
+        },
+        getCompletedCount: function () {
+            return this.list.reduce(function (pResult, t) {
+                return pResult + (t.isCompleted ? 1 : 0);
+            }, 0);
+        },
+        lastModifiedAt: new Date()
+    };
+    TaskService.getAllTasks()
+        .success(function (data) {
+            data.forEach(function (o) {
+                var newTask = new Task(o.name);
+                newTask.isCompleted = o.isCompleted;
+                $scope.tasks.list.push(newTask);
+            });
+        });
+    }]);
 	</script>
 </head>
 <body ng-app="myApp">
@@ -68,7 +88,7 @@
 			data-ng-repeat="task in tasks.list"
 			data-ng-class="{completed : task.isCompleted}"
 			data-ng-click="task.toggleCompletion()"
-			>{{task.name | trimTask}}</li>
+			>{{task.name | trimTask:20}}</li>
 		</ul>
 		<div data-ng-hide="tasks.list.length === 0">
 			<div>
