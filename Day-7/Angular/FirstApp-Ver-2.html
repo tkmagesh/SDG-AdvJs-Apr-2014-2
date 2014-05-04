@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Angular Demo</title>
+	<script src="angular.js"></script>
+	<style>
+	.greeted{
+		color : red;
+		border : 1px solid;
+	}
+	</style>
+	<script>
+	function greetController($scope){
+		$scope.name = {
+			firstName : "Magesh",
+			lastName : "Kuppan",
+
+		}
+		$scope.greet = function(){
+			$scope.isGreeted = true;
+			$scope.greetMsg = "Hi " + $scope.name.firstName + " " + $scope.name.lastName;
+		}
+	}
+	</script>
+</head>
+<body data-ng-app >
+	<div data-ng-controller="greetController">
+		<input type="text"  name="" id="" data-ng-model="name.firstName">
+		<input type="text"  name="" id="" data-ng-model="name.lastName">
+		<input type="button" value="Greet" data-ng-click="greet()" ng-class="{greeted : isGreeted}">
+		<div>{{greetMsg}}</div>
+	</div>
+</body>
+</html>
